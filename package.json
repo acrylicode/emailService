@@ -1,0 +1,21 @@
+{
+  "name": "emailserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "node index.js",
+    "startE": "node --env-file=.env index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.7",
+    "pdf-creator-node": "^2.3.5"
+  }
+}
