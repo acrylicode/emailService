@@ -238,6 +238,7 @@ app.post('/emailService', jsonParser, (req, res) => {
             console.error(err);
         }
         console.log('group', group)
+        console.log('poemLine', poemLine)
         const dataEngangement = {
             group,
             poemLine,
