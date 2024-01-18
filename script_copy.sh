@@ -1,0 +1,1 @@
+curl -X POST https://email-service-cnhh.onrender.com/emailService -H "Content-Type: application/json" -d '{"email":"felipe.infantino@hotmail.com","recieveNotification":true,"recievePersonalized":true,"title":"Ripples of Change","date":"2024-01-11","order":[3,2,1,0]}'  
