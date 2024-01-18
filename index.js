@@ -204,6 +204,8 @@ function replaceAndCapitalize(inputString) {
 
     return replacedString.trim();
 }
+
+
 // For personalized email
 app.post('/emailService', jsonParser, (req, res) => {
     console.log('emailService')
@@ -249,8 +251,10 @@ app.post('/emailService', jsonParser, (req, res) => {
         const headerContent = `<div style="text-align: center; margin-top: 50px">
         <h1 style="font-weight: 700;">Activation key</h1>
         </div>`
+        
+        const templateName = poemLine ? "template.html" : "templateNoGroup.html"
 
-        const certicatePromise = writePdf(dataEngangement, tempPdfId, "template.html", "Activation_key.pdf", headerContent)
+        const certicatePromise = writePdf(dataEngangement, tempPdfId, templateName, "Activation_key.pdf", headerContent)
         
         
         
