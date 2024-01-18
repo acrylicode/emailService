@@ -211,6 +211,8 @@ app.post('/emailService', jsonParser, (req, res) => {
     res.sendStatus(200)
     res.end()
 
+    console.log("recievePersonalized, email, order, title, date, engagerNumber", recievePersonalized, email, order, title, date, engagerNumber)
+
     if (recievePersonalized) {
         const index = permutationsForSouvenirs.findIndex((permutation) => permutation.every((value, index) => value === order[index]))
         const souvenirIndex = index + 1
