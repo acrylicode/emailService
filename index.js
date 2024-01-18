@@ -144,7 +144,7 @@ const sendMail = (mail, souvenirPath, souvenirName, cerificateFolder) => {
         
         I hope you enjoyed the experience.
 
-        Attached is your certificate of engagement, additional guidance and a digital souvenir.
+        Attached is a unique activation key and additional guidance.
 
         Everything you find that takes you to greater knowledge, keep it to yourself.
 
@@ -158,12 +158,8 @@ const sendMail = (mail, souvenirPath, souvenirName, cerificateFolder) => {
         `,
         attachments: [
             {
-                filename: souvenirName,
-                path: souvenirPath
-            },
-            {
-                filename: 'Certificate_of_Engagement.pdf',
-                path: `${cerificateFolder}/Certificate_of_Engagement.pdf`
+                filename: 'Activation_key.pdf',
+                path: `${cerificateFolder}/Activation_key.pdf`
             },
             {
                 filename: 'Additional_Guidence.pdf',
@@ -211,7 +207,7 @@ function replaceAndCapitalize(inputString) {
 // For personalized email
 app.post('/emailService', jsonParser, (req, res) => {
     console.log('emailService')
-    const { recievePersonalized, email, order, title, date } = req.body
+    const { recievePersonalized, email, order, title, date, engagerNumber } = req.body
     res.sendStatus(200)
     res.end()
 
@@ -226,10 +222,11 @@ app.post('/emailService', jsonParser, (req, res) => {
         const souvenirName = `${souvenirIndex}.jpeg`
         const name = replaceAndCapitalize(email.split('@')[0])
 
-        const payload = `[${email},${group},${name},${date}]`
-        const derived_key = CryptoJS.enc.Base64.parse(process.env.ENCRYPTION_KEY)
-        const iv = CryptoJS.enc.Utf8.parse(process.env.ENCRYPTION_IV);
-        const encryptedData = CryptoJS.AES.encrypt(payload, derived_key, { iv: iv, mode: CryptoJS.mode.CBC }).toString();
+        const payload = `${group},${engagerNumber}`
+        // const derived_key = CryptoJS.enc.Base64.parse(process.env.ENCRYPTION_KEY)
+        // const iv = CryptoJS.enc.Utf8.parse(process.env.ENCRYPTION_IV);
+        // const encryptedData = CryptoJS.AES.encrypt(payload, derived_key, { iv: iv, mode: CryptoJS.mode.CBC }).toString();
+        const encryptedData = btoa(payload)
 
         const tempPdfId = uuidv4()
 
@@ -247,10 +244,10 @@ app.post('/emailService', jsonParser, (req, res) => {
             qrCodeUrl: encryptedData
         }
         const headerContent = `<div style="text-align: center; margin-top: 50px">
-        <h1 style="font-weight: 700;">Certificate of Engagement</h1>
+        <h1 style="font-weight: 700;">Activation key</h1>
         </div>`
 
-        const certicatePromise = writePdf(dataEngangement, tempPdfId, "template.html", "Certificate_of_Engagement.pdf", headerContent)
+        const certicatePromise = writePdf(dataEngangement, tempPdfId, "template.html", "Activation_key.pdf", headerContent)
         
         
         

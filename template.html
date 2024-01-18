@@ -34,9 +34,9 @@
         <div>A unique QR code has been generated. It might be important in the future.</div>
         <br>
         <br>
-        <div style="width: 100%; height: 100%; text-align: center; margin-top: 15px;">
-            <div style="width: 324px; margin: 0 auto; padding: 32px 0;">
-                <div id="qr" class="{{this.qrCodeUrl}} {{this.group}}" style="width: 250px; height: 100%; margin: 0 auto; border: 5px solid white"></div>
+        <div style="width: 100%; height: 100%; text-align: center;">
+            <div style="width: 324px; margin: 0 auto; padding: 15px 0;">
+                <div id="qr" class="{{this.qrCodeUrl}} {{this.group}}" style="width: 250px; height: 100%; margin: 0 auto; border: 30px solid #e1e1e2"></div>
             </div>
             <div style="width: 100%; text-align: center; position: absolute; bottom: 50px;">
                 <h1 style="font-weight: 700;">Felipe Infantino M</h1>
@@ -50,6 +50,7 @@
             width: 250,
             height: 250,
             colorDark: "#000000",
+            correctLevel : QRCode.CorrectLevel.L,
             colorLight: document.getElementById("qr").classList[1] === '15' ? '#ffffff' : "#ffffff",
         });
     </script>
