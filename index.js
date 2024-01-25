@@ -7,6 +7,8 @@ const nodemailer = require('nodemailer');
 const CryptoJS = require('crypto-js');
 const writePdf = require('./pdfCreator');
 var fs = require("fs");
+const handlebars = require('handlebars');
+const path = require('path');
 
 const emailSender = process.env.SENDER
 
@@ -132,34 +134,46 @@ function uuidv4() {
     );
 }
 
-const sendMail = (mail, souvenirPath, souvenirName, cerificateFolder) => {
+const sendMail = (mail, souvenirPath, souvenirName, cerificateFolder, token) => {
+
+    const __dirname = path.resolve();
+    const filePath = path.join(__dirname, 'templateEmail.html');
+    const source = fs.readFileSync(filePath, 'utf-8').toString();
+    const template = handlebars.compile(source);
+    const replacements = {
+        url: `https://felipeinfantinom.com/activate?accessToken=${token}`,
+    };
+    const htmlToSend = template(replacements);
+
+
     const mailData = {
         from: emailSender,  // sender address
         to: mail,   // list of receivers
         subject: 'The journey continues',
-        text: `Dear Engager, 
+        html: htmlToSend,
+        // text: `Dear Engager, 
         
         
-        Thank you for your participation and engagement in the exhibition. 
+        // Thank you for your participation and engagement in the exhibition. 
         
-        I hope you enjoyed the experience.
+        // I hope you enjoyed the experience.
 
-        Attached is a unique activation key and additional guidance.
+        // Attached is a unique activation key and additional guidance.
 
-        Everything you find that takes you to greater knowledge, keep it to yourself.
+        // Everything you find that takes you to greater knowledge, keep it to yourself.
 
-        This journey is meant to be enjoyed alone. 
+        // This journey is meant to be enjoyed alone. 
 
-        Trust me it will make sense in the future, only one can be rewarded.
+        // Trust me it will make sense in the future, only one can be rewarded.
 
 
-        Greetings,
-        Felipe Infantino M
-        `,
+        // Greetings,
+        // Felipe Infantino M
+        // `,
         attachments: [
             {
-                filename: 'Activation_key.pdf',
-                path: `${cerificateFolder}/Activation_key.pdf`
+                filename: 'Unique_secret.pdf',
+                path: `${cerificateFolder}/Unique_secret.pdf`
             },
             {
                 filename: 'Additional_Guidence.pdf',
@@ -209,7 +223,7 @@ function replaceAndCapitalize(inputString) {
 // For personalized email
 app.post('/emailService', jsonParser, (req, res) => {
     console.log('emailService')
-    const { recievePersonalized, email, order, title, date, engagerNumber } = req.body
+    const { recievePersonalized, email, order, title, date, engagerNumber, token } = req.body
     res.sendStatus(200)
     res.end()
 
@@ -251,26 +265,26 @@ app.post('/emailService', jsonParser, (req, res) => {
         const headerContent = `<div style="text-align: center; margin-top: 50px">
         <h1 style="font-weight: 700;">Activation key</h1>
         </div>`
-        
+
         const templateName = poemLine ? "template.html" : "templateNoGroup.html"
 
-        const certicatePromise = writePdf(dataEngangement, tempPdfId, templateName, "Activation_key.pdf", headerContent)
-        
-        
-        
+        const certicatePromise = writePdf(dataEngangement, tempPdfId, templateName, "Unique_secret.pdf", headerContent)
+
+
+
         const headerContentHiddenLanguage = `<div style="text-align: center; margin-top: 50px">
         <h1 style="font-weight: 700;">Hidden Language</h1>
         </div>`
-        
+
         const hiddenPromise = writePdf(dataEngangement, tempPdfId, "hiddenLanguage.html", "Additional_Guidence.pdf", headerContentHiddenLanguage)
         Promise.all([certicatePromise, hiddenPromise]).then((values) => {
             console.log(values, souvenirPath);
-            sendMail(email, souvenirPath, souvenirName, tempPdfId)
+            sendMail(email, souvenirPath, souvenirName, tempPdfId, token)
 
         }).catch((err) => {
             console.log(err)
         })
-        
+
 
 
 
